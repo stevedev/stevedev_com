@@ -12,11 +12,12 @@
         font-size: 12px;
         text-transform: uppercase;
       }
-      input[type=text], input[type=number]  { 
+      textarea, input[type=text], input[type=number]  { 
         padding: 4px;
         border: 1px solid #CCC;
         border-radius: 3px;
         font-size: 16px;
+        width: 450px;
       }
 
       button {
@@ -40,7 +41,7 @@
 
     <script type="text/javascript">
       $(function() {
-        let contract_address = "0xEB26940E9970CF85AC7646F42e48b8411A86C71a";
+        let contract_address = "0x238ba8bbced66225fad9e552fde04772b2f8cda2";
         var abi, web3;
         var account_address;
 
@@ -54,18 +55,17 @@
             .artdata()
             .call({from: account_address})
             .then(function(response) {
-              console.log(response);
+              console.log('response', response);
 
               // Set field values:
-              /*
-                $('#title').val();
-                $('#artist-name').val();
-                $('#year').val();
-                $('#country-city').val();
-                $('#artform').val();
-                $('#dimensions').val();
-                $('#first-sale-info').val();
-              */
+              $('#title').val(response.title);
+              $('#artist-name').val(response.artistName);
+              $('#year').val(response.yearCreated);
+              $('#country-city').val(response.originCountryAndCity);
+              $('#artform').val(response.artform);
+              $('#dimensions').val(response.dimensions);
+              $('#first-sale-info').val(response.firstSaleInfo);
+              update_message('Data loaded. Success!');
             }, function(e) {
               update_message('Failed. <br>' + e.message);
               console.error(e);
@@ -75,7 +75,9 @@
         function load() {
           web3 = new Web3();
           web3.setProvider(Web3.givenProvider || "ws://localhost:8546");
+
           console.log('Provider:', Web3.givenProvider);
+
           web3.eth
             .getAccounts()
             .then(function(a) { 
@@ -119,7 +121,7 @@
               $('#dimensions').val(),
               $('#first-sale-info').val()
             )
-            .call({from: account_address})
+            .send({from: account_address})
             .then(function(response) {
               update_message('Finished updating!')
               console.log('Response:', response);
@@ -133,7 +135,9 @@
           abi = data;
           load();
         });
+
       });
+
     </script>
   </head>
 
@@ -180,7 +184,7 @@
 
       <p>
         <label for="first-sale-info">First Sale Info</label>
-        <input type="text" id="first-sale-info">
+        <textarea id="first-sale-info" rows="5" cols="50"></textarea>
       </p>
 
       <p>
