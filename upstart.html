@@ -16,9 +16,12 @@
         //let contract_address = "0x82e95a0684729d615bb19980a8762657e19785f3";
         var abi, account_address, art;
 
+        // set default
+        $('#contract-address').val(contract_address);
+
         function display_art() {
-          art = new Art(contract_address, abi, function(art) {
-            update_art_data(art);
+          art = new Art(contract_address, abi, function(art_instance) {
+            update_art_data(art_instance);
             // seller_cp = new Seller(art, abi);
             // buyer_cp = new Buyer(art, abi);
           });
@@ -41,6 +44,11 @@
         }
 
         function init_handlers() {
+          $('#change-address').on('click', function(e) {
+            contract_address = $('#contract-address').val();
+            display_art();
+          });
+
           // seller buttons
           $('#set-price').on('click', function(e) {
             var btn = $(this);
@@ -140,6 +148,14 @@
     <div class="panels">
       <div class="panel">
         <h2>Art Details</h2>
+
+        <p class="with-button">
+          <label>
+            Contract Address:<br>
+            <input type="text" size="35" id="contract-address">
+            <button id="change-address">Load</button>
+          </label>
+        </p>
 
         <dl>
           <dt>Title</dt>
