@@ -44,6 +44,11 @@ button {
   border-bottom-left-radius: 0;
 }
 
+.multi-input input {
+  display: block;
+  margin-bottom: 3px;
+}
+
 #message {
   padding: 10px;
   border-radius: 5px;

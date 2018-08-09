@@ -118,7 +118,45 @@
             art.vote(code, function(status) { update_btn(btn, status); });
           });
 
+          $('#confirm-shipping-arrival').on('click', function(e) {
+            var btn = $(this);
 
+            btn.prop('disabled', true).text('Pending...');
+            art.confirm_shipping_arrival(function(status) { update_btn(btn, status); });
+          });
+
+
+          $('#set-art-data').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.set_artdata({
+              'title': $('#set-title').val(),
+              'artistName': $('#set-artist-name').val(),
+              'yearCreated': $('#set-year-created').val(),
+              'originCountryAndCity': $('#set-origin-country-and-city').val(),
+              'artform': $('#set-artform').val(),
+              'dimensions': $('#set-dimensions').val(),
+              'firstSaleInfo': $('#set-first-sale-info').val(),
+            }, function(status) { 
+              update_btn(btn, status); 
+            });
+          });
+
+          $('#uppstart-vote').on('click', function(e) {
+            var btn = $(this);
+            var code = $('#uppstart-vote-code').val();
+
+            btn.prop('disabled', true).text('Pending...');
+            art.vote(code, function(status) { update_btn(btn, status); });
+          });
+
+          $('#retrieve-profits').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.retrieve_profits(function(status) { update_btn(btn, status); });
+          });
         }
 
         function update_btn(btn, status) {
@@ -249,8 +287,36 @@
           </label>
         </p>
 
-      </div>
+        <hr>
 
+        <h3>UppstArt Control Panel</h3>
+
+        <p><button id="confirm-shipping-arrival">Confirm Shipping Arrival</button></p>
+
+        <p class="multi-input">
+          <label>
+            Art Data: <br>
+            <input type="text" size="35" id="set-title" placeholder="Title">
+            <input type="text" size="35" id="set-artist-name" placeholder="Artist Name">
+            <input type="text" size="35" id="set-year-created" placeholder="Year Created">
+            <input type="text" size="35" id="set-origin-country-and-city" placeholder="Origin Country and City">
+            <input type="text" size="35" id="set-artform" placeholder="Artform">
+            <input type="text" size="35" id="set-dimensions" placeholder="Dimensions">
+            <input type="text" size="35" id="set-first-sale-info" placeholder="First Sale Info">
+            <button id="set-art-data">Set</button>
+          </label>
+        </p>
+
+        <p class="with-button">
+          <label>
+            Vote: <br>
+            <input type="text" size="35" id="uppstart-vote-code" placeholder="0=Refund Buyer; 1=Pay Seller">
+            <button id="uppstart-vote">Vote</button>
+          </label>
+        </p>
+
+        <p><button id="retrieve-profits">Retrieve Profits</button></p>
+      </div>
     </div>
   </body>
 </html>

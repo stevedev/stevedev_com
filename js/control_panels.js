@@ -227,6 +227,54 @@
       });
     }
 
+    confirm_shipping_arrival(callback) {
+      return this.contract.methods.confirmShippingArrival().send({
+        from: this.account_address
+      }).then(function(response) {
+        if (callback) {
+          callback('success');
+        }
+        return console.log('response', response);
+      }, function(e) {
+        if (callback) {
+          callback('fail');
+        }
+        return console.error("Error confirming shipping arrival.", e);
+      });
+    }
+
+    set_artdata(options, callback) {
+      return this.contract.methods.setArtData(options.title, options.artistName, options.yearCreated, options.originCountryAndCity, options.artform, options.dimensions, options.firstSaleInfo).send({
+        from: this.account_address
+      }).then(function(response) {
+        if (callback) {
+          callback('success');
+        }
+        return console.log('response', response);
+      }, function(e) {
+        if (callback) {
+          callback('fail');
+        }
+        return console.error("Error setting art data.", e);
+      });
+    }
+
+    retrieve_profits(callback) {
+      return this.contract.methods.storedProfit().call({
+        from: this.account_address
+      }).then(function(response) {
+        if (callback) {
+          callback('success');
+        }
+        return console.log('response', response);
+      }, function(e) {
+        if (callback) {
+          callback('fail');
+        }
+        return console.error("Error confirming shipping arrival.", e);
+      });
+    }
+
   };
 
   this.Buyer = class Buyer {
