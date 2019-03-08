@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Web3 Test</title>
+    <link rel="stylesheet" href="styles.css" media="screen">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script language="javascript" type="text/javascript" src="https://cdn.rawgit.com/ethereum/web3.js/1.0/dist/web3.min.js"></script>
+    <script type="text/javascript" src="js/control_panels.js"></script>
+
+    <script type="text/javascript">
+
+      $(function() {
+        let contract_address = "0x238ba8bbced66225fad9e552fde04772b2f8cda2";
+        // main net test:
+        //let contract_address = "0x82e95a0684729d615bb19980a8762657e19785f3";
+        var abi, account_address, art;
+
+        // set default
+        $('#contract-address').val(contract_address);
+
+        function display_art() {
+          art = new Art(contract_address, abi, function(art_instance) {
+            update_art_data(art_instance);
+            // seller_cp = new Seller(art, abi);
+            // buyer_cp = new Buyer(art, abi);
+          });
+        }
+
+        function update_art_data(art) {
+          $('#title').text(art.title());
+          $('#artist-name').text(art.artistName());
+          $('#year').text(art.yearCreated());
+          $('#country-city').text(art.originCountryAndCity());
+          $('#artform').text(art.artform());
+          $('#dimensions').text(art.dimensions());
+          $('#first-sale-info').text(art.firstSaleInfo());
+          $('#price').text(art.price());
+          $('#artist-percentage').text(art.artistPercentage());
+          $('#contract-creator').text(art.contractCreator());
+          $('#current-art-owner').text(art.currArtOwner());
+          $('#for-sale').text(art.forsale());
+          $('#uppstart-percentage').text(art.uppstartPercentage());
+        }
+
+        function init_handlers() {
+          $('#change-address').on('click', function(e) {
+            contract_address = $('#contract-address').val();
+            display_art();
+          });
+
+          // seller buttons
+          $('#set-price').on('click', function(e) {
+            var btn = $(this);
+            var new_price = $('#new-price').val();
+
+            btn.prop('disabled', true).text('Pending...')
+            art.set_price(new_price, function(status) { update_btn(btn, status); });
+          });
+
+          $('#confirm-shipping-departure').on('click', function(e) {
+            var btn = $(this);
+            var shipping_code = $('#shipping-code').val();
+
+            btn.prop('disabled', true).text('Pending...');
+            art.confirm_shipping_departure(shipping_code, function(status) { update_btn(btn, status); });
+          });
+
+          $('#vote').on('click', function(e) {
+            var btn = $(this);
+            var code = $('#vote-code').val();
+
+            btn.prop('disabled', true).text('Pending...');
+            art.vote(code, function(status) { update_btn(btn, status); });
+          });
+
+          $('#toggle-forsale').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.toggle_for_sale(function(status) { update_btn(btn, status); });
+          });
+
+          $('#finish-release').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.finish_and_release(function(status) { update_btn(btn, status); });
+          });
+
+          // buyer buttons
+          $('#buy').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.buy(function(status) { update_btn(btn, status); });
+          });
+
+          $('#refund').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.refund(function(status) { update_btn(btn, status); });
+          });
+
+          $('#dispute').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.raise_dispute(function(status) { update_btn(btn, status); });
+          });
+
+          $('#buyer-vote').on('click', function(e) {
+            var btn = $(this);
+            var code = $('#buyer-vote-code').val();
+
+            btn.prop('disabled', true).text('Pending...');
+            art.vote(code, function(status) { update_btn(btn, status); });
+          });
+
+          $('#confirm-shipping-arrival').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.confirm_shipping_arrival(function(status) { update_btn(btn, status); });
+          });
+
+
+          $('#set-art-data').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.set_artdata({
+              'title': $('#set-title').val(),
+              'artistName': $('#set-artist-name').val(),
+              'yearCreated': $('#set-year-created').val(),
+              'originCountryAndCity': $('#set-origin-country-and-city').val(),
+              'artform': $('#set-artform').val(),
+              'dimensions': $('#set-dimensions').val(),
+              'firstSaleInfo': $('#set-first-sale-info').val(),
+            }, function(status) { 
+              update_btn(btn, status); 
+            });
+          });
+
+          $('#uppstart-vote').on('click', function(e) {
+            var btn = $(this);
+            var code = $('#uppstart-vote-code').val();
+
+            btn.prop('disabled', true).text('Pending...');
+            art.vote(code, function(status) { update_btn(btn, status); });
+          });
+
+          $('#retrieve-profits').on('click', function(e) {
+            var btn = $(this);
+
+            btn.prop('disabled', true).text('Pending...');
+            art.retrieve_profits(function(status) { update_btn(btn, status); });
+          });
+        }
+
+        function update_btn(btn, status) {
+          if (status == 'success') {
+            btn.text('Success!').prop('disabled', false);
+          } else {
+            btn.text('Failed.').prop('disabled', false);
+          }
+        }
+
+        // load abi from file.
+        $.getJSON('AdappcityArtwork-ABI.json', function(data) {
+          abi = data;
+          display_art();
+          init_handlers();
+        });
+
+      });
+
+    </script>
+  </head>
+
+  <body>
+    <h1>Web3 - Uppstart Test</h1>
+
+
+    <div class="panels">
+      <div class="panel">
+        <h2>Art Details</h2>
+
+        <p class="with-button">
+          <label>
+            Contract Address:<br>
+            <input type="text" size="35" id="contract-address">
+            <button id="change-address">Load</button>
+          </label>
+        </p>
+
+        <dl>
+          <dt>Title</dt>
+          <dd id="title"></dd>
+
+          <dt>Price</dt>
+          <dd id="price"></dd>
+
+          <dt>Artist Name</dt>
+          <dd id="artist-name"></dd>
+
+          <dt>Year Created</dt>
+          <dd id="year"></dd>
+
+          <dt>Origin Country and City</dt>
+          <dd id="country-city"></dd>
+
+          <dt>Art Form</dt>
+          <dd id="artform"></dd>
+
+          <dt>Dimensions</dt>
+          <dd id="dimensions"></dd>
+
+          <dt>First Sale Info</dt>
+          <dd id="first-sale-info"></dd>
+
+          <dt>Artist Percentage</dt>
+          <dd id="artist-percentage"></dd>
+
+          <dt>Contract Creator</dt>
+          <dd id="contract-creator"></dd>
+
+          <dt>Current Art Owner</dt>
+          <dd id="current-art-owner"></dd>
+
+          <dt>For Sale</dt>
+          <dd id="for-sale"></dd>
+
+          <dt>Uppstart Percentage</dt>
+          <dd id="uppstart-percentage"></dd>
+        </dl>
+      </div>
+
+      <div class="panel">
+        <h2>Control Panels</h2>
+
+        <h3>Seller:</h3>
+
+        <p class="with-button">
+          <label>
+            Set price: <br>
+            <input type="text" size="55" id="new-price" placeholder="Set Price in WEI (0.000000000000000001 of an Ether)">
+            <button id="set-price">Set Price</button>
+          </label>
+        </p>
+
+        <p class="with-button">
+          <label>
+            Confirm shipping departure: <br>
+            <input type="text" size="35" id="shipping-code" placeholder="Tracking Number">
+            <button id="confirm-shipping-departure">Confirm</button>
+          </label>
+        </p>
+
+        <p class="with-button">
+          <label>
+            Vote: <br>
+            <input type="text" size="35" id="vote-code" placeholder="0=Refund Buyer; 1=Pay Seller">
+            <button id="vote">Vote</button>
+          </label>
+        </p>
+
+        <p>
+          <button id="toggle-forsale">Toggle for Sale / Not for Sale</button>
+        </p>
+
+        <p><button id="finish-release">Finish &amp; Release Ether to Seller</button></p>
+
+        <hr>
+
+        <h3>Buyer:</h3>
+        <p><button id="buy">Buy</button></p>
+        <p><button id="refund">Get Refund</button></p>
+        <p><button id="dispute">Raise Dispute</button></p>
+
+        <p class="with-button">
+          <label>
+            Vote: <br>
+            <input type="text" size="35" id="buyer-vote-code" placeholder="0=Refund Buyer; 1=Pay Seller">
+            <button id="buyer-vote">Vote</button>
+          </label>
+        </p>
+
+        <hr>
+
+        <h3>UppstArt Control Panel</h3>
+
+        <p><button id="confirm-shipping-arrival">Confirm Shipping Arrival</button></p>
+
+        <p class="multi-input">
+          <label>
+            Art Data: <br>
+            <input type="text" size="35" id="set-title" placeholder="Title">
+            <input type="text" size="35" id="set-artist-name" placeholder="Artist Name">
+            <input type="text" size="35" id="set-year-created" placeholder="Year Created">
+            <input type="text" size="35" id="set-origin-country-and-city" placeholder="Origin Country and City">
+            <input type="text" size="35" id="set-artform" placeholder="Artform">
+            <input type="text" size="35" id="set-dimensions" placeholder="Dimensions">
+            <input type="text" size="35" id="set-first-sale-info" placeholder="First Sale Info">
+            <button id="set-art-data">Set</button>
+          </label>
+        </p>
+
+        <p class="with-button">
+          <label>
+            Vote: <br>
+            <input type="text" size="35" id="uppstart-vote-code" placeholder="0=Refund Buyer; 1=Pay Seller">
+            <button id="uppstart-vote">Vote</button>
+          </label>
+        </p>
+
+        <p><button id="retrieve-profits">Retrieve Profits</button></p>
+      </div>
+    </div>
+  </body>
+</html>
