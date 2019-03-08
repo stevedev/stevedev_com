@@ -8,17 +8,17 @@ Date: YYYY-MM-DD
 
 ## Mental/Physical State:
 
-[ ] Energized
-[ ] Confident
-[ ] Accomodating
-[ ] Frustrated
-[ ] Focused
-[ ] Tired
-[ ] Anxious
-[ ] Angry
-[ ] Relaxed
-[ ] Accepting
-[ ] Resigned
+- [ ] Energized
+- [ ] Confident
+- [ ] Accomodating
+- [ ] Frustrated
+- [ ] Focused
+- [ ] Tired
+- [ ] Anxious
+- [ ] Angry
+- [ ] Relaxed
+- [ ] Accepting
+- [ ] Resigned
 
 ## The situation/context:
 
