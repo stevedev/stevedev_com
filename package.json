@@ -1,0 +1,13 @@
+{
+  "name": "stevedev_com",
+  "version": "1.0.0",
+  "description": "Personal site, decision logs, etc.",
+  "main": "index.js",
+  "repository": "git@github.com:stevedev/stevedev_com.git",
+  "author": "Steve Thompson <steve.thompson@clio.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^4.0.0",
+    "gulp-markdown-docs": "^0.1.5"
+  }
+}
